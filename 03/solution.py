@@ -105,7 +105,7 @@ def part2(puzzle):
             new_x, new_y = current_pos[0] + x, current_pos[1] + y
             new_coords = new_x, new_y
             written_no = neighbours(spiral, new_coords).sum()
-            if written_no > 277678:
+            if written_no > puzzle:
                 return written_no
             spiral[new_x][new_y] = written_no
             current_pos = new_coords
