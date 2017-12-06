@@ -48,23 +48,18 @@ def distribute_blocks(banks):
 
 def reallocation(puzzle):
     seen_states = []
-    cycles = 0
     while puzzle not in seen_states:
         seen_states.append(puzzle)
         puzzle = distribute_blocks(puzzle)
-        cycles += 1
-    return cycles
+    return len(seen_states)
 
 
 def reallocation_part2(puzzle):
     seen_states = []
-    cycles = 0
     while puzzle not in seen_states:
         seen_states.append(puzzle)
         puzzle = distribute_blocks(puzzle)
-        cycles += 1
-    return abs(seen_states.index(puzzle) - cycles)
-
+    return len(seen_states) - seen_states.index(puzzle)
 
 # Tests
 assert choose_index_bank([0, 2, 7, 0]) == 2
