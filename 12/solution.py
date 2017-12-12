@@ -60,6 +60,7 @@ assert count_members_root_subgroup(
     root=0
 ) == 6
 
+assert total_number_of_groups(build_network(example)) == 2
 
 if __name__ == '__main__':
     with open('input.txt', 'r') as f:
