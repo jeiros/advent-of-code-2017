@@ -2,6 +2,7 @@
 https://adventofcode.com/2017/day/13
 """
 from itertools import cycle
+from copy import deepcopy
 
 
 class Layer:
@@ -123,15 +124,27 @@ def find_severity(firewall):
 def find_delay(puzzle):
     delay = 0
     finished = False
+    firewall = Firewall(puzzle)
     while not finished:
-        firewall = Firewall(puzzle)
-        for _ in range(delay):
+        copy_firewall = deepcopy(firewall)
+        while firewall.packet_position < len(firewall.state) - 1:
+            if firewall.packet_position == 0 and firewall.state[0].layer[0] == 'S':
+                firewall.caught = True
             firewall.update_scanners()
-        find_severity(firewall)
+            firewall.update_packet_position()
+
         if firewall.caught:
             delay += 1
+            copy_firewall.update_scanners()
+            firewall = deepcopy(copy_firewall)
+            firewall.packet_position = 0
+            firewall.caught = False
         else:
+            print('Finished at delay ', delay)
             finished = True
+
+        if delay % 5000 == 0:
+            print(delay)
     return delay
 
 example = """0: 3
@@ -147,4 +160,4 @@ if __name__ == '__main__':
         puzzle = file.read()
 
     print('Part 1:', find_severity(Firewall(puzzle)))
-    print(find_delay(example))
+    find_delay(puzzle)
