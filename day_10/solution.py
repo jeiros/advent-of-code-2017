@@ -38,13 +38,31 @@ def round_knot_hash(a_list, list_of_len, curr_pos=0, skip=0):
 
 
 def dense_hash(a_list):
-    chunks = [the_list[i * 16:(i + 1) * 16] for i in range(16)]
+    chunks = [a_list[i * 16:(i + 1) * 16] for i in range(16)]
     dense_hash = ""
     for ch in chunks:
         dense = reduce(lambda i, j: i ^ j, ch)
-        dense_hash += format(dense, 'x')
+        dense_hash += format(dense, 'x').zfill(2)
     return dense_hash
 
+
+def get_dense_hash_str(input_str):
+    new_lengths = []
+    for char in input_str:
+        new_lengths += [ord(char)]
+    new_lengths += [17, 31, 73, 47, 23]
+    the_list = list(range(256))
+    c = 0
+    sk = 0
+    for _ in range(64):
+        the_list, c, sk = round_knot_hash(the_list, new_lengths, c, sk)
+    return dense_hash(the_list)
+
+
+assert get_dense_hash_str('') == 'a2582a3a0e66e6e86e3812dcb672a272'
+assert get_dense_hash_str('AoC 2017') == '33efeb34ea91902bb2f59c9920caa6cd'
+assert get_dense_hash_str('1,2,3') == '3efbe78a8d82f29979031a4aa0b16a9d'
+assert get_dense_hash_str('1,2,4') == '63960835bcdc130f0b66d7ff4f6a5a8e'
 
 if __name__ == '__main__':
     # Part 1
@@ -53,14 +71,4 @@ if __name__ == '__main__':
     print('Part 1: ', solution[0] * solution[1])
     # Part 2
     inp = '206,63,255,131,65,80,238,157,254,24,133,2,16,0,1,3'
-    new_lengths = []
-    for char in inp:
-        new_lengths += [ord(char)]
-    new_lengths += [17, 31, 73, 47, 23]
-    the_list = list(range(256))
-    c = 0
-    sk = 0
-    for _ in range(64):
-        the_list, c, sk = round_knot_hash(the_list, new_lengths, c, sk)
-
-    print('Part 2:', dense_hash(the_list))
+    print('Part 2:', get_dense_hash_str(inp))
